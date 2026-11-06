@@ -9,7 +9,7 @@ Software engineer and builder in Boulder County, Colorado. I spent six years bui
 #### Current work (private repositories)
 
 **Real-time ADS-B airspace monitoring and conflict prediction**
-`Scala 3` `Apache Pekko (Typed Actors, Streams, HTTP)` `MySQL/MariaDB` `Slick` `React 19` `TypeScript` `Leaflet` `Prometheus` `Grafana`
+`Scala 3` `Apache Pekko (Typed Actors, Streams, HTTP)` `Percona Server for MySQL` `Slick` `React 19` `TypeScript` `Leaflet` `Prometheus` `Grafana`
 
 - Ingests SBS-1 (BaseStation) message streams from multiple SDR receivers over TCP. Pekko Streams handles framing and parsing, and a typed actor hierarchy keeps one actor per receiver and one per aircraft.
 - Fuses all receivers into one live air picture and runs a periodic pairwise **closest-point-of-approach (CPA)** scan. A TCAS-style **TAU + DMOD** time and distance test flags predicted conflicts. Proximity and predicted-conflict encounters are persisted with running minima.
@@ -17,7 +17,7 @@ Software engineer and builder in Boulder County, Colorado. I spent six years bui
 - A **flight-phase state machine** uses dwell-time smoothing, ground-bit plausibility checks and a legal-transition graph to handle noisy ADS-B data.
 - **Loiter and holding-pattern detection** works from cumulative signed heading change, bounded by distance from the turn's centroid.
 - A **spatial grid index** handles radius queries over about 80,000 airports, cross-validated against brute force in tests.
-- Writes about 145M track rows per month into monthly-partitioned tables. Batched writers survive multi-hour table locks without losing data by backing off, re-queuing failed batches, and spilling to an on-disk binary spool that replays when writes resume.
+- Writes about 145M track rows per month into monthly-partitioned tables (migrated from MariaDB to Percona Server for better partition management). Batched writers survive multi-hour table locks without losing data by backing off, re-queuing failed batches, and spilling to an on-disk binary spool that replays when writes resume.
 - A database watchdog shuts down cleanly so systemd can restart the process. Webhook alerting is rate-limited and deduplicated. Prometheus metrics feed a Grafana dashboard.
 - Includes a REST + Server-Sent Events API and a live React/Leaflet map. Testing covers about 1,300 ScalaTest cases plus Vitest/Playwright, and CI runs on GitHub Actions. It ships as a `.deb`.
 
