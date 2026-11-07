@@ -29,6 +29,21 @@ Software engineer and builder in Boulder County, Colorado. I spent six years bui
 - A time- and band-based correlator classifies each contact as *confirmed*, *Remote ID only*, or *RF with no Remote ID*, the last being a potentially non-compliant drone.
 - All sensors feed an async event bus, with a live WebSocket dashboard, webhook alerts and persistent event logging.
 
+**Local GPU transcription and speaker diarization**
+`Python` `PyTorch` `CUDA` `OpenAI Whisper` `pyannote.audio` `Flask` `Prometheus`
+
+- Runs speech-to-text and speaker diarization entirely on self-hosted NVIDIA hardware, with no cloud inference.
+- Ships as a CLI, a web app with live progress streaming, and polling workers that scale horizontally by claiming jobs from a coordination API.
+- Sizes the model to available VRAM, serializes GPU access through configurable concurrency slots, and falls back to CPU on CUDA out-of-memory.
+- Prometheus metrics feed a Grafana dashboard tracking stage latency, GPU slot wait, VRAM use and real-time factor. Deploys as a systemd Debian package.
+
+**[mapfun](https://github.com/patrickmccoy/mapfun): graph routing algorithms from scratch** (public)
+`Scala 3` `OpenStreetMap` `Neo4j` `Apache AGE`
+
+- Uses a zero-allocation compressed-sparse-row graph with Dijkstra (indexed decrease-key heap), A\*, bidirectional Dijkstra, Bellman-Ford, Floyd-Warshall, Yen's k-shortest paths and Tarjan's SCC.
+- Routes on real OpenStreetMap road networks using two-pass PBF import and junction contraction, with the same traversals implemented in Neo4j (Cypher) and PostgreSQL (Apache AGE).
+- 87 tests cross-validate the algorithms against each other.
+
 **Multi-tenant construction management platform**
 `Scala 3` `Cats Effect` `http4s` `Doobie` `PostgreSQL` `React`
 
@@ -37,4 +52,4 @@ Software engineer and builder in Boulder County, Colorado. I spent six years bui
 ---
 
 #### Toolbox
-Scala · Python · TypeScript/React · Pekko · Kafka · PostgreSQL/MySQL · AWS · Docker · Linux · SDR/RF
+Scala · Python · TypeScript/React · Pekko · Kafka · PyTorch/CUDA · PostgreSQL/MySQL · Neo4j · AWS · Docker · Linux · SDR/RF
